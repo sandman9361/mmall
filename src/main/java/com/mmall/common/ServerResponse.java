@@ -1,15 +1,19 @@
 package com.mmall.common;
-
+/*
+服务器响应
+ */
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-
 import java.io.Serializable;
 //在类上注入此标志时，返回此类时，会返回set属性里的值
+//保证序列化json的时候，如果是null的对象，key也会消失；
+//举例说明：JSON原来经过JACKSON转换以后为{"name"："name","sex":null}
+//加入注解后，结果为{"name"："name"}
+//sex节点被去掉了
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-//保证序列化json的时候，如果是null的对象，key也会消失
 public class ServerResponse<T> implements Serializable {
-    private int status;
-    private String msg;
+    private int status;//登录状态
+    private String msg;//返回信息
     private T data;
     private ServerResponse(int status){
         this.status = status;
@@ -52,14 +56,14 @@ public class ServerResponse<T> implements Serializable {
         return new ServerResponse<T>(ResponseCode.SUCCESS.getCode(),msg);
 }
     //当服务器创建成功，将data放进去
-    public static <T> ServerResponse<T> createBySeccussMessage(T data){
+    public static <T> ServerResponse<T> createBySeccuss(T data){
         return new ServerResponse<T>(ResponseCode.SUCCESS.getCode(),data);
     }
     //消息和数据
-    public static <T> ServerResponse<T> createBySeccussMessage(String msg,T data){
+    public static <T> ServerResponse<T> createBySeccuss(String msg,T data){
         return new ServerResponse<T>(ResponseCode.SUCCESS.getCode(),msg,data);
     }
-
+    //错误消息函数
     public static <T> ServerResponse<T> createByError(){
         return  new ServerResponse<T>(ResponseCode.ERROR.getCode(),ResponseCode.ERROR.getDesc());
     }

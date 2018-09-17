@@ -187,4 +187,18 @@
     WHERE username = #{username,jdbcType=VARCHAR}
     AND password = #{password,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectQuestionByUsername" resultType="String" parameterType="string">
+    select question
+    FROM mmall_user
+    WHERE username = #{username,jdbcType=VARCHAR}
+  </select>
+
+  <select id="checkAnswer" resultType="int" parameterType="map">
+    select count(1)
+    FROM mmall_user
+    WHERE username = #{username,jdbcType=VARCHAR}
+    AND question = #{question,jdbcType=VARCHAR}
+    AND answer = #{answer,jdbcType=VARCHAR}
+  </select>
 </mapper>

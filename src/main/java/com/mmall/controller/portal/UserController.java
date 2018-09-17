@@ -28,6 +28,9 @@ public class UserController {
         //与接口名称保持一致，指定请求只能post方式
         @RequestMapping(value = "login.do",method =RequestMethod.POST)
         //使返回时候，自动通过Spring MVC的jackson插件将我们的返回值序列化成json格式
+       /*
+       登录功能
+        */
         @ResponseBody
         public ServerResponse<User> login(String username, String password, HttpSession session){
             //Service-->mybatis->dao
@@ -61,5 +64,31 @@ public class UserController {
         @ResponseBody
         public ServerResponse<String> checkValid(String str,String type){
                 return iUserService.checkValid(str,type);
+        }
+        /*
+        获取用户信息
+         */
+        @RequestMapping(value = "get_user_info.do",method =RequestMethod.POST)
+        @ResponseBody
+        public ServerResponse<User> getUserInfo(HttpSession session){
+                User user = (User) session.getAttribute(Const.CURRENT_USER);
+                if(user != null){
+                    return ServerResponse.createBySeccuss(user);
+                }
+                return  ServerResponse.createByErrorMessage("用户未登录，无法获取当前用户信息");
+        }
+        /*
+        获取密码提示问题
+         */
+        @RequestMapping(value = "forget_get_question.do",method =RequestMethod.POST)
+        @ResponseBody
+        public ServerResponse<String> forgetGerQuestion(String username){
+                return iUserService.selectQuestion(username);
+        }
+        //使用本地缓存检查问题答案的接口
+        @RequestMapping(value = "forget_check_answer.do",method =RequestMethod.POST)
+        @ResponseBody
+        public ServerResponse<String> forgetCheckAnswer(String username,String question,String answer){
+                return iUserService.checkAnswer(username,question,answer);
         }
 }
