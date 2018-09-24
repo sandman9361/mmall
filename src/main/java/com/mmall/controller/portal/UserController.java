@@ -90,16 +90,25 @@ public class UserController {
                 return iUserService.selectQuestion(username);
         }
         //使用本地缓存检查问题答案的接口
-        @RequestMapping(value = "forget_check_answer.do",method =RequestMethod.POST)
+        @RequestMapping(value = "forget_check_answer.do",method =RequestMethod.GET)
         @ResponseBody
         public ServerResponse<String> forgetCheckAnswer(String username,String question,String answer){
                 return iUserService.checkAnswer(username,question,answer);
         }
         //忘记密码后的重置密码
-        @RequestMapping(value = "forget_reset_password.do",method =RequestMethod.POST)
+        @RequestMapping(value = "forget_reset_password.do",method =RequestMethod.GET)
         @ResponseBody
         public ServerResponse<String> forgetResetPassword(String username,String passwordNew,String forgetToken){
                 return iUserService.forgetResetPassword(username,passwordNew,forgetToken);
         }
+        @RequestMapping(value = "reset_password.do",method =RequestMethod.GET)
+        @ResponseBody
         //登录状态的重置密码
+        public ServerResponse<String> resetPassword(HttpSession session,String passwordOld,String passwordNew){
+            User user = (User)session.getAttribute(Const.CURRENT_USER);
+            if(user == null){
+                return ServerResponse.createByErrorMessage("用户未登录");
+            }
+            return iUserService.resetPassword(passwordOld,passwordNew,user);
+        }
 }

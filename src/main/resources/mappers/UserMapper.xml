@@ -207,4 +207,12 @@
     set password = #{passwordNew,jdbcType=VARCHAR},update_time = now()
     where username = #{username,jdbcType=VARCHAR}
   </update>
+
+  <select id="checkPassword" resultType="int" parameterType="map">
+    select
+    count(1)
+    from mmall_user
+    where password = #{password,jdbcType=VARCHAR}
+    and id = #{userId,jdbcType=VARCHAR}
+  </select>
 </mapper>
