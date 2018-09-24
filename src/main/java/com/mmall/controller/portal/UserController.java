@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
+
 //Spring的注解，使UserController起到Controller作用
 @Controller
 //把请求地址全部设置到/User下,如果写在方法上面，那么下面类中的每个方法都要写这个注解
@@ -43,9 +45,11 @@ public class UserController {
         /*
         用户登出功能
          */
+        //value：   指定请求的实际地址，指定的地址可以是URI Template 模式（后面将会说明）；
+        //method：  指定请求的method类型， GET、POST、PUT、DELETE等；
         @RequestMapping(value = "logout.do",method =RequestMethod.POST)
         @ResponseBody
-        public ServerResponse<String> logout(HttpSession session){
+        public ServerResponse < String > logout(HttpSession session) {
                 session.removeAttribute(Const.CURRENT_USER);
                 return ServerResponse.createBySeccuss();
         }
@@ -91,4 +95,11 @@ public class UserController {
         public ServerResponse<String> forgetCheckAnswer(String username,String question,String answer){
                 return iUserService.checkAnswer(username,question,answer);
         }
+        //忘记密码后的重置密码
+        @RequestMapping(value = "forget_reset_password.do",method =RequestMethod.POST)
+        @ResponseBody
+        public ServerResponse<String> forgetResetPassword(String username,String passwordNew,String forgetToken){
+                return iUserService.forgetResetPassword(username,passwordNew,forgetToken);
+        }
+        //登录状态的重置密码
 }

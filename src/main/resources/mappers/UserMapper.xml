@@ -201,4 +201,10 @@
     AND question = #{question,jdbcType=VARCHAR}
     AND answer = #{answer,jdbcType=VARCHAR}
   </select>
+
+  <update id="updatePasswordByUsername" resultType="map">
+    update mmall_user
+    set password = #{passwordNew,jdbcType=VARCHAR},update_time = now()
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
 </mapper>
