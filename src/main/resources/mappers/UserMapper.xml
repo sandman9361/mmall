@@ -215,4 +215,11 @@
     where password = #{password,jdbcType=VARCHAR}
     and id = #{userId,jdbcType=VARCHAR}
   </select>
+
+  <select id="checkEmailByUser" resultType="int" parameterType="map">
+    SELECT count(1)
+    FROM mmall_user
+    WHERE email = #{email,jdbcType=VARCHAR}
+    AND id != #{userId,jdbcType=VARCHAR}
+  </select>
 </mapper>

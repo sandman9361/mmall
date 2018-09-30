@@ -111,11 +111,13 @@ public class UserServiceImpl implements IUserService {
         }
         return ServerResponse.createByErrorMessage("问题的答案错误");
     }
-
+    //忘记密码后，重置密码
     public ServerResponse<String> forgetResetPassword(String username,String passwordNew,String forgetToken){
+        //记录登录状态的标记Token
         if(StringUtils.isBlank(forgetToken)){
             return ServerResponse.createByErrorMessage("参数错误，token需要传递");
         }
+        //返回一个有效的响应validResponse
         ServerResponse validResponse = this.checkValid(username,Const.USERNAME);
         if (validResponse.isSuccess()){
             //用户不存在
@@ -149,5 +151,28 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createBySeccussMessage("密码更新成功");
         }
         return ServerResponse.createByErrorMessage("密码更新失败");
+    }
+
+    public ServerResponse<User> updateInformation(User user){
+        //username是不能被更新的
+        //email也要进行一个校验，校验新的email是不是已经存在，并且存在的email如果相同的话，不能是我们当前的这个用户的。
+        //如果resultCount返回大于0，就说明当前用户输入的email已经存在。
+        int resultCount = userMapper.checkEmailByUser(user.getEmail(),user.getId());
+        //判断email是否与当前用户相符
+        if(resultCount > 0){
+            return  ServerResponse.createByErrorMessage("email已存在,请更换email再尝试更新");
+        }
+        User updateUser = new User();
+        updateUser.setId(user.getId());
+        updateUser.setEmail(user.getEmail());
+        updateUser.setPhone(user.getPhone());
+        updateUser.setQuestion(user.getQuestion());
+        updateUser.setAnswer(user.getAnswer());
+        //更新需要修改的信息
+        int updateCount = userMapper.updateByPrimaryKeySelective(updateUser);
+        if(updateCount > 0){
+            return ServerResponse.createBySeccuss("更新个人信息成功",updateUser);
+        }
+        return ServerResponse.createByErrorMessage("更新个人信息失败");
     }
 }

@@ -8,7 +8,7 @@ public interface IUserService {
 
      ServerResponse<String> register(User user);
 
-     public ServerResponse<String> checkValid(String str,String type);
+     ServerResponse<String> checkValid(String str,String type);
 
      ServerResponse<String> selectQuestion(String username);
 
@@ -17,4 +17,6 @@ public interface IUserService {
      ServerResponse<String> forgetResetPassword(String username,String passwordNew,String forgetToken);
 
      ServerResponse<String> resetPassword(String passwordOld, String passwordNew,User user);
+     //更新个人信息接口
+     ServerResponse<User> updateInformation(User user);
 }
