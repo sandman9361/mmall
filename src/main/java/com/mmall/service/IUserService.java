@@ -19,4 +19,6 @@ public interface IUserService {
      ServerResponse<String> resetPassword(String passwordOld, String passwordNew,User user);
      //更新个人信息接口
      ServerResponse<User> updateInformation(User user);
+     //获取当前用户个人信息
+     ServerResponse<User> getInformation(Integer userId);
 }
